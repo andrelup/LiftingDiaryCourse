@@ -1,4 +1,14 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LiftingDiaryCourse
+
+Proyecto de formación práctica para aprender a usar **Claude Code**, desde nivel principiante hasta nivel avanzado ("de beginner a pro").
+
+En lugar de ejercicios sueltos, el aprendizaje se apoya en un caso real: **LiftingDiary**, una aplicación de diario de entrenamiento (registro de rutinas, sesiones y progreso) construida con Next.js. La app en sí es el vehículo del curso, no el objetivo final — lo que importa es practicar sobre una base de código real (autenticación, rutas protegidas, formularios, estado, etc.) los flujos de trabajo, buenas prácticas y funcionalidades de Claude Code que se van introduciendo progresivamente a lo largo de las distintas fases del curso.
+
+**Stack técnico:**
+- [Next.js 16](https://nextjs.org) (App Router)
+- [Clerk](https://clerk.com) para autenticación
+- TypeScript en modo estricto
+- Tailwind CSS v4
 
 ## Getting Started
 
