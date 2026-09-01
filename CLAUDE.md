@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-This is a Next.js 16 (App Router) project scaffolded with `create-next-app` and not yet customized — `src/app/page.tsx` still contains the default starter content. There is no custom architecture, routing, data layer, or component structure established yet. When implementing features, you are largely establishing conventions from scratch; follow standard Next.js App Router patterns (`src/app/**`, file-based routing, `layout.tsx` per route segment).
+This is a Next.js 16 (App Router) workout-logging app. The UI is still mostly the `create-next-app` starter (`src/app/page.tsx`), but auth (Clerk) and the data layer (Drizzle + Neon Postgres) are in place. There is no component structure or routing beyond the auth pages yet; when implementing features, follow standard Next.js App Router patterns (`src/app/**`, file-based routing, `layout.tsx` per route segment).
 
 ## Commands
 
@@ -12,6 +12,10 @@ This is a Next.js 16 (App Router) project scaffolded with `create-next-app` and 
 - `npm run build` — production build
 - `npm run start` — run the production build
 - `npm run lint` — run ESLint (flat config in `eslint.config.mjs`, extends `eslint-config-next` core-web-vitals + typescript rules)
+- `npm run db:generate` — generate a SQL migration into `drizzle/` from `src/db/schema.ts`
+- `npm run db:migrate` — apply pending migrations to the Neon branch in `DATABASE_URL`
+- `npm run db:push` — push the schema without a migration file (dev only)
+- `npm run db:seed` — seed the system exercise catalog (and a sample workout if `SEED_USER_ID` is set)
 
 There is no test runner configured yet.
 
@@ -21,6 +25,12 @@ There is no test runner configured yet.
 - **Styling**: Tailwind CSS v4 via `@tailwindcss/postcss` (postcss.config.mjs), global styles in `src/app/globals.css`.
 - **Fonts**: Geist Sans/Mono loaded via `next/font/google` in `src/app/layout.tsx`, exposed as CSS variables (`--font-geist-sans`, `--font-geist-mono`).
 - **TypeScript**: strict mode enabled.
+- **Auth**: Clerk (`@clerk/nextjs` v7). `clerkMiddleware()` lives in `src/proxy.ts` (Next 16 renamed `middleware.ts`). Domain rows are owned by the Clerk user id, stored as a plain `text` column (`user_id`) — there is no local `users` table.
+- **Data layer**: Drizzle ORM + Neon HTTP driver (`drizzle-orm` v1 rc).
+  - `src/db/schema.ts` — tables and enums; `src/db/relations.ts` — `defineRelations` config; `src/db/index.ts` — the `db` client, built with `{ relations }` so `db.query.*` works. Import from `@/db`.
+  - Drizzle v1 dropped `drizzle(url, { schema })`: relations are declared with `defineRelations` from `drizzle-orm/relations` and passed as `{ relations }`.
+  - Migrations live in `drizzle/`, config in `drizzle.config.ts` (reads `.env.local`).
+  - Schema: `exercises` (catalog; `user_id` null = system exercise) → `workout_exercises` (ordered join, one row per exercise performed in a workout) ← `workouts`; `workout_sets` hangs off `workout_exercises`. Weight unit lives on `workouts`; set weights are in that unit.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
