@@ -20,32 +20,31 @@ git log --oneline -10
 
 The `git log` is there to match the repo's recent message style, not to copy it blindly.
 
-If the current branch is `main`, **do not commit**: first create a `feature/<short-name>` branch (per CLAUDE.md, one branch per feature) and tell the user.
+This is a solo training project: **commit directly on `main`**, no feature branches needed.
 
 ## Step 2 — Group into atomic commits
 
-Each commit must be a coherent unit that can be reviewed on its own. If the diff mixes independent things (a backend feature + a frontend fix + tooling), make **several commits** with selective `git add` instead of a single one.
+Each commit must be a coherent unit that can be reviewed on its own. If the diff mixes independent things (e.g. a Clerk change + an unrelated styling tweak + tooling), make **several commits** with selective `git add` instead of a single one.
 
 Do not mix in the same commit:
 
-- Code from `backend/` and from `frontend/` — they are independent projects and the scope must reflect that.
 - A functional change with a broad refactor or an automatic reformat.
-- Tests covering pre-existing code together with a new feature (though tests + code for the same feature do belong together).
+- Unrelated features or fixes that happen to touch the same file.
 
 ## Step 3 — Write the message
 
-Format: `<type>(<scope>): <subject>`
+Format: `<type>: <subject>`, optionally with a scope when it adds clarity: `<type>(<scope>): <subject>`.
 
 **Types** (the project's): `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`.
 
-**Scope**: the module touched — `backend`, `frontend`, `infra`, `ci`. It can be narrowed when that adds value (`feat(backend): ...`). If the commit is cross-cutting across the monorepo, the scope may be omitted.
+**Scope**: this is a single Next.js app, so most commits are scopeless (`feat:`, `docs:`, `chore:`). Add a scope only when it disambiguates, e.g. `feat(auth): ...` for Clerk-related work.
 
 **Subject**:
 
 - In English, lowercase initial, no trailing period.
 - Present imperative: `add`, `fix`, `rename` — never `added`, `adds`, `adding`.
 - At most ~72 characters.
-- Describe **what changes and why**, not the files touched. `fix(backend): chain books migration after users` ✔ / `fix: update alembic file` ✘.
+- Describe **what changes and why**, not the files touched. `feat: open Clerk sign in/up buttons in modal mode` ✔ / `feat: update layout.tsx` ✘.
 
 **Body** (optional, after a blank line): only if the *why* does not fit in the subject — a design decision, a trade-off, context a reviewer would need. Do not restate the diff in prose.
 
@@ -60,20 +59,20 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 Valid examples from the repo:
 
 ```
-feat(backend): add optimistic locking to Book and FavouriteList (#42)
-test(backend): cover customer favourite lists
-docs(backend): add hexagonal architecture guide
-fix(frontend): fix login redirect
+feat: add Clerk authentication
+docs: describe project as a Claude Code training course
+chore: add Claude Code project config
+feat: open Clerk sign in/up buttons in modal mode
 ```
 
 ## Step 4 — Verify before committing
 
 Before `git commit`, review what you are about to stage:
 
-- **Never** stage `.env`, credentials, tokens, API keys or database URLs. If they show up in the diff, **stop and tell the user**. If the variable is new, what gets versioned is `.env.example` with an example value.
-- No debug `print()`, no forgotten `console.log`, no `.only` in tests, no commented-out code.
-- Do not add generated files, build artifacts, or temporary files from your own work.
-- Confirm that the tests for the module touched pass if the change is functional (`make test-back` / `make test-front`).
+- **Never** stage `.env`, credentials, tokens, API keys (including Clerk keys) or database URLs. If they show up in the diff, **stop and tell the user**. If the variable is new, what gets versioned is `.env.example` with an example value.
+- No debug `console.log`, no commented-out code.
+- Do not add generated files, build artifacts (`.next/`), or temporary files from your own work.
+- If the change is functional, confirm `npm run lint` passes (there is no test runner configured in this project).
 
 ## Step 5 — Commit
 
@@ -82,10 +81,10 @@ Use a heredoc for the message, so that the body and the trailer keep their line 
 ```bash
 git add <specific paths>
 git commit -m "$(cat <<'EOF'
-feat(backend): add book search endpoint
+feat: open Clerk sign in/up buttons in modal mode
 
-Search runs on the persistence adapter to avoid loading the full
-catalog into memory.
+Avoids a full page redirect for authentication by keeping the user
+on the current page and opening the Clerk flow as an overlay.
 
 Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 EOF
