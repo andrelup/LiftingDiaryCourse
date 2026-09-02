@@ -105,19 +105,62 @@ export function zonedDayRange(
   };
 }
 
-/** Today's calendar date in `timeZone`, as `YYYY-MM-DD`. */
-export function todayInZone(timeZone: string = APP_TIME_ZONE): IsoDate {
+/** The calendar day an instant falls on in `timeZone`, as `YYYY-MM-DD`. */
+export function instantToIsoDate(
+  instant: Date,
+  timeZone: string = APP_TIME_ZONE,
+): IsoDate {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).formatToParts(new Date());
+  }).formatToParts(instant);
 
   const at = (type: Intl.DateTimeFormatPartTypes) =>
     parts.find((part) => part.type === type)!.value;
 
   return `${at("year")}-${at("month")}-${at("day")}`;
+}
+
+/** Today's calendar date in `timeZone`, as `YYYY-MM-DD`. */
+export function todayInZone(timeZone: string = APP_TIME_ZONE): IsoDate {
+  return instantToIsoDate(new Date(), timeZone);
+}
+
+/** The current wall-clock time in `timeZone`, as `HH:mm`. */
+export function currentTimeOfDayInZone(
+  timeZone: string = APP_TIME_ZONE,
+): string {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone,
+    hourCycle: "h23",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).formatToParts(new Date());
+
+  const at = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)!.value;
+
+  return `${at("hour")}:${at("minute")}`;
+}
+
+/**
+ * The UTC instant of `HH:mm` on `date`, read as wall-clock time in `timeZone`.
+ *
+ * Built on `zonedDayStart` rather than on a fresh offset lookup: the day's
+ * start already accounts for whichever offset is in effect, so a 23- or
+ * 25-hour DST day comes out right without a second correction pass.
+ */
+export function zonedDateTimeToInstant(
+  date: IsoDate,
+  time: string,
+  timeZone: string = APP_TIME_ZONE,
+): Date {
+  const [hours, minutes] = time.split(":").map(Number);
+  const start = zonedDayStart(date, timeZone);
+
+  return new Date(start.getTime() + (hours * 60 + minutes) * 60_000);
 }
 
 /**
