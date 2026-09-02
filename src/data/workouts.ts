@@ -39,3 +39,5 @@ export type WorkoutWithDetails = Awaited<
 >[number];
 
 export type WorkoutExerciseWithDetails = WorkoutWithDetails["exercises"][number];
+
+export type WorkoutSetRow = WorkoutExerciseWithDetails["sets"][number];
