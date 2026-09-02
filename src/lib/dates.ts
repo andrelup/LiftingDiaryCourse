@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 /**
  * The single place the app decides which calendar day a `timestamptz` belongs
  * to. `workouts.performed_at` is an instant; "all workouts on 2026-09-02" is
@@ -158,27 +160,14 @@ export function localDateToIsoDate(date: Date): IsoDate {
   return `${year}-${month}-${day}`;
 }
 
-// A fixed locale, not the ambient one: `undefined` resolves to the server's
-// locale during SSR and the browser's on the client, which is a hydration
-// mismatch waiting to happen.
-const LONG_DATE = new Intl.DateTimeFormat("en-GB", { dateStyle: "full" });
-const TIME_OF_DAY = new Intl.DateTimeFormat("en-GB", {
-  timeStyle: "short",
-  timeZone: APP_TIME_ZONE,
-});
-
-/** e.g. `Wednesday 2 September 2026`. */
-export function formatLongDate(date: IsoDate): string {
-  return LONG_DATE.format(isoDateToLocalDate(date));
+/** e.g. `2nd Sep 2026` — the one display shape for a calendar day. */
+export function formatLongDate(date: Date | IsoDate): string {
+  return format(typeof date === "string" ? isoDateToLocalDate(date) : date, "do MMM yyyy");
 }
 
-/**
- * Wall-clock time of an instant, in the app's zone. The zone is pinned: format
- * in the server's zone instead and a 00:30 Madrid workout renders as "22:30"
- * on a card filed under the *next* day's heading.
- */
+/** Wall-clock time of day, 24h — `18:30`. */
 export function formatTimeOfDay(instant: Date): string {
-  return TIME_OF_DAY.format(instant);
+  return format(instant, "HH:mm");
 }
 
 /** `45 min`, `1 h 2 min` — `null` in, `null` out, so callers can omit it. */
