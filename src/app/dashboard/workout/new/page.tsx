@@ -26,6 +26,8 @@ export default async function NewWorkoutPage() {
           variant="ghost"
           size="sm"
           className="-ml-2 mb-3 text-muted-foreground"
+          // The rendered element is an anchor, not a <button>.
+          nativeButton={false}
           render={<Link href="/dashboard" />}
         >
           <ArrowLeftIcon />

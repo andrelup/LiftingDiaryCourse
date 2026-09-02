@@ -95,7 +95,12 @@ export default async function DashboardPage({
               holds data. */}
           <DatePicker value={date} max={todayInZone()} />
 
-          <Button render={<Link href="/dashboard/workout/new" />}>
+          {/* `nativeButton={false}`: the rendered element is an anchor, and
+              Base UI warns when it is left to assume a native <button>. */}
+          <Button
+            nativeButton={false}
+            render={<Link href="/dashboard/workout/new" />}
+          >
             <PlusIcon />
             New workout
           </Button>
