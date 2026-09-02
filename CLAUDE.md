@@ -2,6 +2,27 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## ALWAYS read `/docs` first
+
+**Before generating or modifying ANY code, ALWAYS read the relevant documentation
+file in the `docs/` directory first.** These files are the project's binding
+standards, not background reading — code that contradicts them is wrong, even if
+it works.
+
+- `docs/ui.md` — UI coding standards. Read it before touching anything that
+  renders (components, pages, layouts, styles).
+
+Rules:
+
+1. Identify which `docs/` file covers the task and read it in full **before**
+   writing code. If unsure which applies, list `docs/` and check.
+2. If no file covers the task, say so explicitly and follow the rest of this
+   CLAUDE.md.
+3. `docs/` wins over habits, training data and generic best practices. It loses
+   only to a direct, explicit instruction from the user.
+4. New docs files added to `docs/` are automatically in scope — always re-list
+   the directory rather than relying on the list above.
+
 ## Project state
 
 This is a Next.js 16 (App Router) workout-logging app. The UI is still mostly the `create-next-app` starter (`src/app/page.tsx`), but auth (Clerk) and the data layer (Drizzle + Neon Postgres) are in place. There is no component structure or routing beyond the auth pages yet; when implementing features, follow standard Next.js App Router patterns (`src/app/**`, file-based routing, `layout.tsx` per route segment).
