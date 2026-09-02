@@ -14,6 +14,9 @@ it works.
 - `docs/data-fetching.md` — data fetching and database access standards. Read
   it before touching anything that reads or writes application data (pages that
   load data, `src/data/**`, `src/db/**`).
+- `docs/auth.md` — authentication and authorisation standards (Clerk). Read it
+  before touching anything that signs a user in, gates a route, or reads the
+  current user (`src/proxy.ts`, auth pages, any use of `auth()`).
 
 Rules:
 
