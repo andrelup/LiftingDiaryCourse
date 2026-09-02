@@ -1,6 +1,7 @@
 import { ClerkProvider, SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,7 +27,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <ClerkProvider>
-          <header className="flex items-center justify-end gap-4 border-b border-black/[.08] px-6 py-3 dark:border-white/[.145]">
+          <header className="flex items-center justify-end gap-4 border-b border-border px-6 py-3">
+            <Show when="signed-in">
+              <Link
+                href="/dashboard"
+                className="mr-auto text-sm font-medium hover:underline"
+              >
+                Dashboard
+              </Link>
+            </Show>
             <Show when="signed-out">
               <SignInButton mode="modal" />
               <SignUpButton mode="modal" />
