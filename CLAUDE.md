@@ -11,6 +11,9 @@ it works.
 
 - `docs/ui.md` — UI coding standards. Read it before touching anything that
   renders (components, pages, layouts, styles).
+- `docs/data-fetching.md` — data fetching and database access standards. Read
+  it before touching anything that reads or writes application data (pages that
+  load data, `src/data/**`, `src/db/**`).
 
 Rules:
 
