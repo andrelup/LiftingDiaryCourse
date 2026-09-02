@@ -4,8 +4,9 @@ import { Skeleton } from "@/components/ui/skeleton";
  * Covers every render of the dashboard, which is always a request-time one
  * (`searchParams` + Clerk reading headers).
  *
- * The date picker is a plain GET form, so changing the day is a full
- * navigation and lands here too — hence the shape below mirrors the page.
+ * Changing the day is a client-side transition that keeps the previous day on
+ * screen, so this is the first-paint fallback only — hence the shape below
+ * mirrors the page.
  */
 export default function DashboardLoading() {
   return (
@@ -15,7 +16,7 @@ export default function DashboardLoading() {
           <Skeleton className="h-8 w-36" />
           <Skeleton className="h-4 w-24" />
         </div>
-        <Skeleton className="h-8 w-[260px]" />
+        <Skeleton className="h-8 w-[190px]" />
       </div>
 
       <div className="flex flex-col gap-6">

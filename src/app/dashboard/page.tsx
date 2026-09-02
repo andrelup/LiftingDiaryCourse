@@ -1,9 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { CalendarIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -13,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { getWorkoutsForDay, type WorkoutSetRow } from "@/data/workouts";
 import {
   formatClock,
@@ -24,6 +21,8 @@ import {
   todayInZone,
 } from "@/lib/dates";
 import { cn } from "@/lib/utils";
+
+import { DatePicker } from "./date-picker";
 
 /** `72.50` → `72.5`, `100.00` → `100`. Postgres `numeric` arrives as a string. */
 function formatWeight(weight: string): string {
@@ -87,22 +86,9 @@ export default async function DashboardPage({
           </p>
         </div>
 
-        {/* A plain GET form: submitting navigates to ?date=YYYY-MM-DD and the
-            server re-renders with that day's query. No client state involved. */}
-        <form action="/dashboard" method="get" className="flex items-end gap-2">
-          <Input
-            type="date"
-            name="date"
-            defaultValue={date}
-            max={todayInZone()}
-            aria-label="Show workouts logged on"
-            className="w-[190px]"
-          />
-          <Button type="submit" variant="outline">
-            <CalendarIcon />
-            Show
-          </Button>
-        </form>
+        {/* Picking a day navigates to ?date=YYYY-MM-DD; this component re-runs
+            on the server with that day's query. No client state holds data. */}
+        <DatePicker value={date} max={todayInZone()} />
       </div>
 
       {workouts.length === 0 ? (
