@@ -16,7 +16,10 @@ export default function DashboardLoading() {
           <Skeleton className="h-8 w-36" />
           <Skeleton className="h-4 w-24" />
         </div>
-        <Skeleton className="h-8 w-[190px]" />
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-8 w-[190px]" />
+          <Skeleton className="h-8 w-36" />
+        </div>
       </div>
 
       <div className="flex flex-col gap-6">

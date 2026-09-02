@@ -1,7 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { PlusIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -86,9 +89,17 @@ export default async function DashboardPage({
           </p>
         </div>
 
-        {/* Picking a day navigates to ?date=YYYY-MM-DD; this component re-runs
-            on the server with that day's query. No client state holds data. */}
-        <DatePicker value={date} max={todayInZone()} />
+        <div className="flex items-center gap-2">
+          {/* Picking a day navigates to ?date=YYYY-MM-DD; this component
+              re-runs on the server with that day's query. No client state
+              holds data. */}
+          <DatePicker value={date} max={todayInZone()} />
+
+          <Button render={<Link href="/dashboard/workout/new" />}>
+            <PlusIcon />
+            New workout
+          </Button>
+        </div>
       </div>
 
       {workouts.length === 0 ? (

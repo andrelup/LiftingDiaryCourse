@@ -1,4 +1,5 @@
 import { db } from "@/db";
+import { workouts } from "@/db/schema";
 import { APP_TIME_ZONE, zonedDayRange, type IsoDate } from "@/lib/dates";
 
 /**
@@ -41,3 +42,29 @@ export type WorkoutWithDetails = Awaited<
 export type WorkoutExerciseWithDetails = WorkoutWithDetails["exercises"][number];
 
 export type WorkoutSetRow = WorkoutExerciseWithDetails["sets"][number];
+
+/**
+ * Log a new (still empty) workout for `userId`.
+ *
+ * `userId` is stamped here rather than accepted inside `values`, so there is no
+ * shape in which a caller can insert a row owned by somebody else.
+ */
+export async function createWorkout(
+  userId: string,
+  values: {
+    name: string | null;
+    performedAt: Date;
+    weightUnit: "kg" | "lb";
+    durationSeconds: number | null;
+    notes: string | null;
+  },
+) {
+  const [workout] = await db
+    .insert(workouts)
+    .values({ ...values, userId })
+    .returning();
+
+  return workout;
+}
+
+export type CreatedWorkout = Awaited<ReturnType<typeof createWorkout>>;
