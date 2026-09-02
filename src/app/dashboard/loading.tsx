@@ -1,12 +1,11 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
 /**
- * Covers the first navigation into the dashboard, which is always a
- * request-time render (`searchParams` + Clerk reading headers).
+ * Covers every render of the dashboard, which is always a request-time one
+ * (`searchParams` + Clerk reading headers).
  *
- * Changing the date does *not* land here: the picker pushes inside a
- * transition, so React keeps the previous day's cards mounted instead of
- * falling back to this boundary.
+ * The date picker is a plain GET form, so changing the day is a full
+ * navigation and lands here too — hence the shape below mirrors the page.
  */
 export default function DashboardLoading() {
   return (
@@ -16,7 +15,7 @@ export default function DashboardLoading() {
           <Skeleton className="h-8 w-36" />
           <Skeleton className="h-4 w-24" />
         </div>
-        <Skeleton className="h-9 w-[260px]" />
+        <Skeleton className="h-8 w-[260px]" />
       </div>
 
       <div className="flex flex-col gap-6">
