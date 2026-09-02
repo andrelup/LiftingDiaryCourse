@@ -14,6 +14,9 @@ it works.
 - `docs/data-fetching.md` — data fetching and database access standards. Read
   it before touching anything that reads or writes application data (pages that
   load data, `src/data/**`, `src/db/**`).
+- `docs/data-mutation.md` — data mutation standards (Server Actions in
+  colocated `actions.ts`, zod-validated, writing through `src/data/**`). Read
+  it before touching anything that inserts, updates or deletes data.
 - `docs/auth.md` — authentication and authorisation standards (Clerk). Read it
   before touching anything that signs a user in, gates a route, or reads the
   current user (`src/proxy.ts`, auth pages, any use of `auth()`).
