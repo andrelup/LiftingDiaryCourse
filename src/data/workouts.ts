@@ -1,3 +1,5 @@
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import { workouts } from "@/db/schema";
 import { APP_TIME_ZONE, zonedDayRange, type IsoDate } from "@/lib/dates";
@@ -68,3 +70,50 @@ export async function createWorkout(
 }
 
 export type CreatedWorkout = Awaited<ReturnType<typeof createWorkout>>;
+
+/**
+ * One workout of `userId`'s, or `undefined`.
+ *
+ * `where` carries both keys: matching on the id alone would make somebody
+ * else's session one guessed uuid away, and "belongs to me" is a question the
+ * query answers, never JavaScript afterwards. A row owned by another user is
+ * therefore indistinguishable from one that does not exist — which is exactly
+ * what the caller should tell the visitor.
+ */
+export async function getWorkoutById(userId: string, workoutId: string) {
+  return db.query.workouts.findFirst({
+    where: { id: workoutId, userId },
+  });
+}
+
+export type WorkoutRow = NonNullable<Awaited<ReturnType<typeof getWorkoutById>>>;
+
+/**
+ * Update the session details of one workout, if it belongs to `userId`.
+ *
+ * Ownership is part of the `where`, so a foreign id updates zero rows and the
+ * helper returns `undefined` — the caller reports that as "not found" rather
+ * than as a silent success. `userId` itself is never among the writable
+ * values: a workout cannot change hands.
+ */
+export async function updateWorkout(
+  userId: string,
+  workoutId: string,
+  values: {
+    name: string | null;
+    performedAt: Date;
+    weightUnit: "kg" | "lb";
+    durationSeconds: number | null;
+    notes: string | null;
+  },
+) {
+  const [workout] = await db
+    .update(workouts)
+    .set({ ...values, updatedAt: new Date() })
+    .where(and(eq(workouts.id, workoutId), eq(workouts.userId, userId)))
+    .returning();
+
+  return workout;
+}
+
+export type UpdatedWorkout = Awaited<ReturnType<typeof updateWorkout>>;
