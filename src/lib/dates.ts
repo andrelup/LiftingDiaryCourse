@@ -132,12 +132,27 @@ export function todayInZone(timeZone: string = APP_TIME_ZONE): IsoDate {
 export function currentTimeOfDayInZone(
   timeZone: string = APP_TIME_ZONE,
 ): string {
+  return instantToTimeOfDayInZone(new Date(), timeZone);
+}
+
+/**
+ * The wall-clock time an instant reads as in `timeZone`, as `HH:mm`.
+ *
+ * The zoned counterpart of `formatTimeOfDay`, which formats in the *runtime's*
+ * zone — fine in the browser, wrong on a server that runs in UTC. Use this one
+ * whenever the value is fed back into an editable `<input type="time">`, so the
+ * time shown is the same wall clock `zonedDateTimeToInstant` will read it as.
+ */
+export function instantToTimeOfDayInZone(
+  instant: Date,
+  timeZone: string = APP_TIME_ZONE,
+): string {
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone,
     hourCycle: "h23",
     hour: "2-digit",
     minute: "2-digit",
-  }).formatToParts(new Date());
+  }).formatToParts(instant);
 
   const at = (type: Intl.DateTimeFormatPartTypes) =>
     parts.find((part) => part.type === type)!.value;
