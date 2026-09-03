@@ -17,6 +17,9 @@ it works.
 - `docs/data-mutation.md` — data mutation standards (Server Actions in
   colocated `actions.ts`, zod-validated, writing through `src/data/**`). Read
   it before touching anything that inserts, updates or deletes data.
+- `docs/server-components.md` — Server Component standards (the server/client
+  boundary, and `params` / `searchParams` as awaited Promises). Read it before
+  touching anything under `src/app/**`.
 - `docs/auth.md` — authentication and authorisation standards (Clerk). Read it
   before touching anything that signs a user in, gates a route, or reads the
   current user (`src/proxy.ts`, auth pages, any use of `auth()`).
