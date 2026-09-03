@@ -17,6 +17,9 @@ it works.
 - `docs/data-mutation.md` — data mutation standards (Server Actions in
   colocated `actions.ts`, zod-validated, writing through `src/data/**`). Read
   it before touching anything that inserts, updates or deletes data.
+- `docs/routing.md` — routing standards (every route lives under `/dashboard`,
+  route protection by prefix in `src/proxy.ts`, linking and URL state). Read it
+  before adding, moving or gating a route.
 - `docs/server-components.md` — Server Component standards (the server/client
   boundary, and `params` / `searchParams` as awaited Promises). Read it before
   touching anything under `src/app/**`.
