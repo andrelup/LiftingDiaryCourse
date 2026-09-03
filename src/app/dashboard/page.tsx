@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { PlusIcon } from "lucide-react";
+import { PencilIcon, PlusIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -131,8 +131,20 @@ export default async function DashboardPage({
                 <CardHeader>
                   <CardTitle>{workout.name ?? "Workout"}</CardTitle>
                   <CardDescription>{description}</CardDescription>
-                  <CardAction>
+                  <CardAction className="flex items-center gap-2">
                     <Badge variant="secondary">{workout.weightUnit}</Badge>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-muted-foreground"
+                      nativeButton={false}
+                      render={
+                        <Link href={`/dashboard/workout/${workout.id}`} />
+                      }
+                    >
+                      <PencilIcon />
+                      Edit
+                    </Button>
                   </CardAction>
                 </CardHeader>
 
